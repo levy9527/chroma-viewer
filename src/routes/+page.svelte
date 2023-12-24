@@ -35,26 +35,20 @@
   const columns = ['id', 'metadata', 'document', 'embedding']
   let chunksApi = ''
   let grid = []
+  let total = -1
   const selectCollection = async (e) => {
     const params = new URLSearchParams();
     params.append('collectionId', e.detail.id);
     params.append('limit', 1000);
     params.append('offset', 0);
     
-    chunksApi = `/api/chunks?${params}`
+    const response = await fetch(`/api/chunks/count?` + params, {
+      method: 'GET',
+    })
+    const resp = await response.json()
+    total  = resp.payload
 
-    //const response = await fetch(`/api/chunks?` + params, {
-    //  method: 'GET',
-    //})
-    //const resp = await response.json()
-    //grid = resp.payload['ids'].map((v, i) => {
-    //   return {
-    //     id: v,
-    //     document: resp.payload['documents'][i],
-    //     metadata: resp.payload['metadatas'] ? JSON.stringify(resp.payload['metadatas'][i]) : '',
-    //     embedding: resp.payload['embeddings'] ? resp.payload['embeddings'][i] : '',
-    //   }
-    //})
+    chunksApi = `/api/chunks?${params}`
   }
 
 </script>
@@ -97,7 +91,10 @@
                 metadata: resp.payload['metadatas'] ? JSON.stringify(resp.payload['metadatas'][i]) : '',
                 embedding: resp.payload['embeddings'] ? resp.payload['embeddings'][i] : '',
               }
-      })
+      }),
+      total: () => {
+        return total
+      },
     }}
     />
 {/if}
