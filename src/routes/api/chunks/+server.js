@@ -15,7 +15,6 @@ export async function GET({ request, cookies, url }) {
     }
   })
   const data = await response.json()
-  console.log(data)
 
 	return json({ success: true, payload: data }, { status: 200 });
 }
