@@ -3,11 +3,11 @@
 	import { Button, Input, Grid, Loader } from '@svelteuidev/core';
 	export let data;
 
-  const items = data.collections.map(v => v);
+  const items = data.collections.map(v => Object.assign({}, v, {label: v.name, value: v.id}));
   const optionIdentifier = 'id';
   const appendCollectionInfo = option => ` (${option.tenant}/${option.database})`
   const getOptionLabel = (option) => option.name + appendCollectionInfo(option);
-  const getSelectionLabel = (option) => option.name + appendCollectionInfo(option);
+  const getSelectionLabel = (option) => option.name
 
   let apiBase = data.apiBase
   let isLoading = false
@@ -22,6 +22,18 @@
     });
     isLoading = false
     location.reload()
+  }
+
+  const selectCollection = async (e) => {
+    const params = new URLSearchParams();
+    params.append('collectionId', e.detail.id);
+    params.append('limit', 1000);
+    params.append('offset', 0);
+
+    const response = await fetch(`/api/records?` + params, {
+      method: 'GET',
+    })
+    console.log(response)
   }
 </script>
 
@@ -43,5 +55,8 @@
 
 {#if apiBase && items.length > 0}
   <h2>Collection</h2>
-  <Select {items} {optionIdentifier} {getSelectionLabel} {getOptionLabel} placeholder="select collection"></Select>
+  <Select {items}
+    on:change={selectCollection}
+    placeholder="select collection">
+  </Select>
 {/if}
