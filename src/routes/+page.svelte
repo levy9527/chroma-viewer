@@ -1,6 +1,8 @@
 <script>
 	import Select from 'svelte-select';
 	import { Button, Input, Grid, Loader } from '@svelteuidev/core';
+  import GridJs from "gridjs-svelte"
+
 	export let data;
 
   const items = data.collections.map(v => Object.assign({}, v, {label: v.name, value: v.id}));
@@ -11,6 +13,12 @@
 
   let apiBase = data.apiBase
   let isLoading = false
+  function handleKeyDown(event) {
+    if (event.key === "Enter" || event.keyCode === 13) {
+      saveSettings()
+    }
+  }
+
   const saveSettings = async () => {
     isLoading = true
     await fetch(`/api/settings`, {
@@ -24,23 +32,34 @@
     location.reload()
   }
 
+  const columns = ['id', 'metadata', 'document', 'embedding']
+  let grid = []
   const selectCollection = async (e) => {
     const params = new URLSearchParams();
     params.append('collectionId', e.detail.id);
     params.append('limit', 1000);
     params.append('offset', 0);
 
-    const response = await fetch(`/api/records?` + params, {
+    const response = await fetch(`/api/chunks?` + params, {
       method: 'GET',
     })
-    console.log(response)
+    const resp = await response.json()
+    grid = resp.payload['ids'].map((v, i) => {
+       return {
+         id: v,
+         document: resp.payload['documents'][i],
+         metadata: resp.payload['metadatas'] ? JSON.stringify(resp.payload['metadatas'][i]) : '',
+         embedding: resp.payload['embeddings'] ? resp.payload['embeddings'][i] : '',
+       }
+    })
   }
+
 </script>
 
 <h2>Settings</h2>
 <Grid>
     <Grid.Col span={8}>
-      <Input placeholder="api_base url" bind:value={apiBase} />
+      <Input placeholder="api_base url" bind:value={apiBase} on:keydown={handleKeyDown}/>
     </Grid.Col>
     <Grid.Col span={4}>
       {#if !isLoading}
@@ -59,4 +78,14 @@
     on:change={selectCollection}
     placeholder="select collection">
   </Select>
+
 {/if}
+
+{#if grid.length > 0}
+  <h2>Chunks</h2>
+  <GridJs data={grid} {columns}/>
+{/if}
+
+<style global>
+  @import "https://cdn.jsdelivr.net/npm/gridjs/dist/theme/mermaid.min.css";
+</style>
