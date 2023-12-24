@@ -81,7 +81,10 @@
 {#if chunksApi }
   <h2>Chunks</h2>
   <GridJs {columns}
-    pagination={{ enabled: true, limit: LIMIT,
+    search= {{
+      selector: (cell, rowIndex, cellIndex) => cell
+    }}
+    pagination={{ limit: LIMIT,
       server: {
         url: (prev, page, limit) => {
           // params 会把带上/path，并且会 encode
