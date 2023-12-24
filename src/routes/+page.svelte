@@ -69,12 +69,17 @@
     </Grid.Col>
 </Grid>
 
-{#if apiBase && items.length > 0}
+{#if data.hasSettings}
   <h2>Collection</h2>
-  <Select {items}
-    on:change={selectCollection}
-    placeholder="select collection">
-  </Select>
+
+  {#if items.length > 0}
+    <Select {items}
+      on:change={selectCollection}
+      placeholder="select collection">
+    </Select>
+  {:else}
+    collection is empty!
+  {/if}
 
 {/if}
 
