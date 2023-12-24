@@ -56,7 +56,7 @@
 <h2>Settings</h2>
 <Grid>
     <Grid.Col span={8}>
-      <Input placeholder="api_base url" bind:value={apiBase} on:keydown={handleKeyDown}/>
+      <Input placeholder="api_base, example: http://localhost:8000" bind:value={apiBase} on:keydown={handleKeyDown}/>
     </Grid.Col>
     <Grid.Col span={4}>
       {#if !isLoading}
@@ -95,7 +95,7 @@
       }
     }}
     server={{
-      url: chunksApi,
+      //url: chunksApi,
       then: resp => resp.payload['ids'].map((v, i) => {
               return {
                 id: v,
