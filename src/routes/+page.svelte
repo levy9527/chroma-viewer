@@ -2,9 +2,9 @@
 	import Select from 'svelte-select';
 	import { Button, Input, Grid, Loader } from '@svelteuidev/core';
   import GridJs from "gridjs-svelte"
-
 	export let data;
 
+  const LIMIT = 1000
   const items = data.collections.map(v => Object.assign({}, v, {label: v.name, value: v.id}));
   const optionIdentifier = 'id';
   const appendCollectionInfo = option => ` (${option.tenant}/${option.database})`
@@ -39,7 +39,7 @@
   const selectCollection = async (e) => {
     const params = new URLSearchParams();
     params.append('collectionId', e.detail.id);
-    params.append('limit', 1000);
+    params.append('limit', LIMIT);
     params.append('offset', 0);
     
     const response = await fetch(`/api/chunks/count?` + params, {
@@ -81,7 +81,16 @@
 {#if chunksApi }
   <h2>Chunks</h2>
   <GridJs {columns}
-    pagination={{ enabled: true, limit: 100, }}
+    pagination={{ enabled: true, limit: LIMIT,
+      server: {
+        url: (prev, page, limit) => {
+          // params 会把带上/path，并且会 encode
+          const params = new URLSearchParams(chunksApi)
+          params.set('offset', page);
+          return `${decodeURIComponent(params)}`
+        }
+      }
+    }}
     server={{
       url: chunksApi,
       then: resp => resp.payload['ids'].map((v, i) => {
