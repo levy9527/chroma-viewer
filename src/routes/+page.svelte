@@ -33,25 +33,28 @@
   }
 
   const columns = ['id', 'metadata', 'document', 'embedding']
+  let chunksApi = ''
   let grid = []
   const selectCollection = async (e) => {
     const params = new URLSearchParams();
     params.append('collectionId', e.detail.id);
     params.append('limit', 1000);
     params.append('offset', 0);
+    
+    chunksApi = `/api/chunks?${params}`
 
-    const response = await fetch(`/api/chunks?` + params, {
-      method: 'GET',
-    })
-    const resp = await response.json()
-    grid = resp.payload['ids'].map((v, i) => {
-       return {
-         id: v,
-         document: resp.payload['documents'][i],
-         metadata: resp.payload['metadatas'] ? JSON.stringify(resp.payload['metadatas'][i]) : '',
-         embedding: resp.payload['embeddings'] ? resp.payload['embeddings'][i] : '',
-       }
-    })
+    //const response = await fetch(`/api/chunks?` + params, {
+    //  method: 'GET',
+    //})
+    //const resp = await response.json()
+    //grid = resp.payload['ids'].map((v, i) => {
+    //   return {
+    //     id: v,
+    //     document: resp.payload['documents'][i],
+    //     metadata: resp.payload['metadatas'] ? JSON.stringify(resp.payload['metadatas'][i]) : '',
+    //     embedding: resp.payload['embeddings'] ? resp.payload['embeddings'][i] : '',
+    //   }
+    //})
   }
 
 </script>
@@ -81,9 +84,22 @@
 
 {/if}
 
-{#if grid.length > 0}
+{#if chunksApi }
   <h2>Chunks</h2>
-  <GridJs data={grid} {columns}/>
+  <GridJs {columns}
+    pagination={{ enabled: true, limit: 100, }}
+    server={{
+      url: chunksApi,
+      then: resp => resp.payload['ids'].map((v, i) => {
+              return {
+                id: v,
+                document: resp.payload['documents'][i],
+                metadata: resp.payload['metadatas'] ? JSON.stringify(resp.payload['metadatas'][i]) : '',
+                embedding: resp.payload['embeddings'] ? resp.payload['embeddings'][i] : '',
+              }
+      })
+    }}
+    />
 {/if}
 
 <style global>
