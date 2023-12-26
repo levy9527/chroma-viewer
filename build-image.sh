@@ -1,5 +1,5 @@
 #!/bin/sh
-# make sure you have setup Node.js environment
-yarn && yarn build
+# make sure you have run the `command` bellow
+#yarn && yarn build
 TAG=$(./get-tag.sh)
 docker build -t levychen/chroma-viewer:$TAG .
