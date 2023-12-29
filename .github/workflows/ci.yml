@@ -38,10 +38,7 @@ jobs:
       - name: Get Version
         id: version
         run: |
-          echo "VERSION=$(./get-version.sh)" >> $GITHUB_OUTPUT
-
-      - name: ls
-      - run: ls -R
+          ls && echo "VERSION=$(./get-version.sh)" >> $GITHUB_OUTPUT
       
       - name: Build and push
         uses: docker/build-push-action@v5
