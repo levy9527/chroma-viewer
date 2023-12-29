@@ -5,8 +5,8 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Copy package.json and package-lock.json
-COPY package.json yarn.lock ./
-COPY build ./build
+COPY package.json yarn.lock /app
+COPY build /app/build
 
 # Install dependencies
 RUN yarn --production
