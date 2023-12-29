@@ -5,8 +5,7 @@ FROM node:18-alpine
 WORKDIR /app
 
 # Copy package.json and package-lock.json
-COPY package.json yarn.lock /app
-COPY build /app/build
+COPY package.json yarn.lock build/ .
 
 # Install dependencies
 RUN yarn --production
@@ -15,4 +14,4 @@ RUN yarn --production
 EXPOSE 3000
 
 # Start the app
-CMD [ "node", "build/index.js" ]
+CMD [ "node", "index.js" ]
