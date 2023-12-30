@@ -2,7 +2,8 @@
 # make sure you have run the `command` bellow
 #yarn && yarn build
 TAG=$(./get-version.sh)
-docker build -t levychen/chroma-viewer:latest levychen/chroma-viewer:$TAG .
+docker build -t levychen/chroma-viewer:$TAG .
+docker tag levychen/chroma-viewer:$TAG levychen/chroma-viewer:latest 
 
 # --push
 push=false
@@ -24,7 +25,7 @@ if [ "$push" = true ]; then
   echo "push is true. Performing push operation..."
 
   echo "Pushing to registry..."
-  docker push levychen/chroma-viewer:$TAG
+  docker push levychen/chroma-viewer:$TAG -a
 
   echo "Build and push complete!"
 else
