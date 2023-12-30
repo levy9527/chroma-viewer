@@ -8,7 +8,7 @@ docker build -t levychen/chroma-viewer:$TAG .
 push=false
 
 # Process command-line arguments
-while [[ $# -gt 0 ]]; do
+while [ $# -gt 0 ]; do
   case $1 in
     --push)
       push=true
