@@ -38,11 +38,12 @@ jobs:
       - name: Get Version
         id: version
         run: |
-          ls && echo "VERSION=$(./get-version.sh)" >> $GITHUB_OUTPUT
+          ./build-image.sh --push
+          #ls && echo "VERSION=$(./get-version.sh)" >> $GITHUB_OUTPUT
       
-      - name: Build and push
-        uses: docker/build-push-action@v5
-        with:
-          push: true
-          tags: levychen/chroma-viewer:${{ steps.version.outputs.VERSION }}
+      #- name: Build and push
+      #  uses: docker/build-push-action@v5
+      #  with:
+      #    push: true
+      #    tags: levychen/chroma-viewer:${{ steps.version.outputs.VERSION }}
 
