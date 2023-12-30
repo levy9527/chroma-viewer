@@ -25,7 +25,7 @@ if [ "$push" = true ]; then
   echo "push is true. Performing push operation..."
 
   echo "Pushing to registry..."
-  docker push levychen/chroma-viewer:$TAG -a
+  docker push levychen/chroma-viewer -a
 
   echo "Build and push complete!"
 else
