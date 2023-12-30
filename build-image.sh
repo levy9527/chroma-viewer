@@ -2,7 +2,7 @@
 # make sure you have run the `command` bellow
 #yarn && yarn build
 TAG=$(./get-version.sh)
-docker build -t levychen/chroma-viewer:$TAG .
+docker build -t levychen/chroma-viewer:latest levychen/chroma-viewer:$TAG .
 
 # --push
 push=false
