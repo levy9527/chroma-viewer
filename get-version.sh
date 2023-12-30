@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # Get the current datetime in the desired format (YYYY-MM-DD-HHMM)
-CURRENT_DATETIME=$(date +'%Y_%m_%d_%H_%M')
+CURRENT_DATETIME=$(TZ="Asia/Shanghai" date +'%Y_%m_%d_%H_%M')
 
 # Get the abbreviated Git commit hash
 GIT_COMMIT=$(git rev-parse --short HEAD)
